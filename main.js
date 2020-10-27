@@ -14,22 +14,37 @@ app.set('views', __dirname + '/views')
 app.get("/", (req, resp) => {
     resp.status(200)
     resp.type('text/html')
-    resp.render('index');
+    resp.render('index'); //note: no need .hbs
 })
 
+//serve static files from static dir so that it can load
+// this needs to be after get /root else it blocks root req
+app.use(express.static(__dirname + "/static"))
 
+
+//mount express static to render images
+//else images wont render because hbs is only a template
 app.get("/roll" , (req, resp) => {
 
-    const imgList = [];
+    function generateRandomImg() {
+        let val =  Math.floor(Math.random() * 6) + 1
+        const fileName = "/dice_images/" + val.toString() + ".png"
+        return fileName
+    }
+
+    const fileName1 = generateRandomImg()
+    const fileName2 = generateRandomImg()
     resp.status(200)
     resp.type('text/html')
-    // resp.render('roll', { 
-    //     dice-img: imgList  })
-
-    // })
+    resp.render('roll', 
+        { 
+            image1: fileName1, 
+            image2: fileName2 })
+    
 })
 
 // capture err
+
 app.use((req, resp) => {
     resp.status(400)
     resp.type('text/html')
@@ -40,5 +55,5 @@ app.use((req, resp) => {
 //start server
 
 app.listen(PORT, () => {
-    console.info(`Application started on port ${PORT}.`)
+    console.info(`Application started on port ${PORT} at ${new Date()}.`)
 })
