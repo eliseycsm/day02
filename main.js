@@ -1,6 +1,9 @@
 const express = require('express');
-
 const handlebars = require('express-handlebars')
+
+//to get list of files in dir, we need to import fs & path
+const fs = require('fs')
+const path = require('path')
 
 const PORT = parseInt(process.argv[2]) || parsetInt(process.env.APP_PORT) || 3000;
 
@@ -22,9 +25,32 @@ app.get("/", (req, resp) => {
 app.use(express.static(__dirname + "/static"))
 
 
+app.get("/image", (req, resp) => {
+    const dirPath = path.join(__dirname, '/static/dice_images')
+    let filenames =  fs.readdirSync(dirPath)
+
+    resp.status(200).type('text/html')
+    //resp.send(filenames) -returns arr
+
+    function generateRandomImg(arr) {
+        let val =  Math.floor(Math.random() * arr.length)
+        const fileName = "/dice_images/" + arr[val]
+        return fileName
+    }
+
+    const fileName1 = generateRandomImg(filenames)
+    const fileName2 = generateRandomImg(filenames)
+    resp.render('images', 
+        { 
+            image1: fileName1, 
+            image2: fileName2 })
+})
+
+
+
 //mount express static to render images
 //else images wont render because hbs is only a template
-app.get("/roll" , (req, resp) => {
+/* app.get("/roll" , (req, resp) => {
 
     function generateRandomImg() {
         let val =  Math.floor(Math.random() * 6) + 1
@@ -42,7 +68,7 @@ app.get("/roll" , (req, resp) => {
             image2: fileName2 })
     
 })
-
+ */
 // capture err
 
 app.use((req, resp) => {
