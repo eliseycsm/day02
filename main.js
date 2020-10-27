@@ -14,7 +14,7 @@ app.set('views', __dirname + '/views')
 app.get("/", (req, resp) => {
     resp.status(200)
     resp.type('text/html')
-    resp.sendFile(__dirname + '/static/index.html')
+    resp.render('index');
 })
 
 
@@ -23,10 +23,10 @@ app.get("/roll" , (req, resp) => {
     const imgList = [];
     resp.status(200)
     resp.type('text/html')
-    resp.render('roll', { 
-        dice-img: imgList  })
+    // resp.render('roll', { 
+    //     dice-img: imgList  })
 
-    })
+    // })
 })
 
 // capture err
