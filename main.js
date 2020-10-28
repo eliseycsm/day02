@@ -32,7 +32,6 @@ app.set('views', __dirname + '/views')
 app.get(["/","/index.html"], (req, resp) => {  
     //use arr to get both reqs to render same view
     resp.status(200) // always return status and type
-    resp.type('text/html')
     resp.render('index'); //note: no need .hbs
 })
 
@@ -42,7 +41,7 @@ app.get(["/","/index.html"], (req, resp) => {
 //     const dirPath = path.join(__dirname, '/static/dice_images')
 //     let filenames =  fs.readdirSync(dirPath)
 
-//     resp.status(200).type('text/html')
+//     resp.status(200)
 //     //resp.send(filenames) -returns arr
 
 //     function generateRandomImg(arr) {
@@ -76,7 +75,6 @@ app.get("/roll" , (req, resp) => {
     const fileName1 = generateRandomImg()
     const fileName2 = generateRandomImg()
     resp.status(200)
-    resp.type('text/html')
     resp.render('roll', 
         { 
             image1: fileName1, 
@@ -99,4 +97,4 @@ app.listen(PORT, () => {
 //debug statement to ensure that u know when u are debugging and what port u are at
 
 //app.use -> use matches anything so if u put error capturing function before express.static
-//it will not load and will return html even though req is asking for, say css, to load the page
+//app.use(express.static) will not load as the error function will intercept all requests
