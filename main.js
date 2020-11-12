@@ -1,11 +1,8 @@
 const express = require('express');
 const handlebars = require('express-handlebars')
 
-//to get list of files in dir, we need to import fs & path
-const fs = require('fs')
-const path = require('path')
-
-const PORT = parseInt(process.argv[2]) || parsetInt(process.env.APP_PORT) || 3000;
+//env variables
+const PORT = parseInt(process.argv[2]) || parseInt(process.env.APP_PORT) || 3000;
 //create instance of express
 const app = express()
 
@@ -25,18 +22,21 @@ images and html dirs. usually separated so need to mount separately
 
 //configure HBS
 app.engine('hbs', handlebars({defaultLayout: 'default.hbs'}))
-
 app.set('view engine', 'hbs')
 app.set('views', __dirname + '/views')
 
-app.get(["/","/index.html"], (req, resp) => {  
-    //use arr to get both reqs to render same view
-    resp.status(200) // always return status and type
-    resp.render('index'); //note: no need .hbs
-})
+//refactor landingPage 
+
+const landingPage = (req, resp) => {
+    resp.status(200).type('text/html') // always return status and type
+    resp.render('index') // no need .hbs
+}
+
+app.get(["/","/index.html"], //use arr to get both reqs to render same view
+    landingPage)
 
 
-
+// alternative: use modules path and fs to read from folder directly to generate filepaths
 // app.get("/image", (req, resp) => {
 //     const dirPath = path.join(__dirname, '/static/dice_images')
 //     let filenames =  fs.readdirSync(dirPath)
@@ -59,7 +59,7 @@ app.get(["/","/index.html"], (req, resp) => {
 // })
 
 
-/* WAY TO ADD IMAGES INTO CODE - USE ARR LOL*/
+/* WAY TO ADD IMAGES INTO CODE - USE ARR */
 // const ICE-IMGS = [ "", "1.png", "2.png", "3.png", "4.png", "5.png", "6.png" ]
 // and get filenames from the arr
 // add empty str to push index forward so that we dun have to change formula of val below
